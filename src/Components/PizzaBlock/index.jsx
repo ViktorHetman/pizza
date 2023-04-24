@@ -14,8 +14,8 @@ function PizzaBlock({ title, price, imageUrl, sizes, types }) {
         <ul>
           {types.map((elm, idx) => (
             <li
-              onClick={() => setActiveDough(elm)}
               key={idx}
+              onClick={() => setActiveDough(elm)}
               className={activeDough === elm ? 'active' : ''}>
               {doughNames[elm]}
             </li>
