@@ -3,6 +3,7 @@
 .sort {
   position: relative;
   &__label {
+    cursor: pointer;
     display: flex;
     align-items: center;
 
