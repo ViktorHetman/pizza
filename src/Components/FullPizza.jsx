@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function FullPizza() {
   const [pizza, setPizza] = useState();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getPizzaById = async () => {
@@ -13,9 +14,11 @@ function FullPizza() {
         setPizza(data);
       } catch (e) {
         alert('Ошибка при получении пиццы');
+        navigate('/');
       }
     };
     getPizzaById();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (!pizza) {
