@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'qs';
@@ -12,23 +12,23 @@ import Pagination from '../Components/Pagination';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
 
-function Home() {
+const Home: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizzas);
+  const { categoryId, sort, currentPage } = useSelector((state: any) => state.filter);
+  const { items, status } = useSelector((state: any) => state.pizzas);
 
-  const searchValue = useSelector((state) => state.filter.searchValue);
+  const searchValue = useSelector((state: any) => state.filter.searchValue);
 
-  const changeCategoryHandler = (id) => {
+  const changeCategoryHandler = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const changePageHandler = (number) => {
-    dispatch(setCurrentPage(number));
+  const changePageHandler = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
 
   const getPizzas = async () => {
@@ -37,7 +37,10 @@ function Home() {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    dispatch(fetchPizzas({ currentPage, category, sortBy, order, search }));
+    dispatch(
+      //@ts-ignore
+      fetchPizzas({ currentPage, category, sortBy, order, search }),
+    );
 
     window.scrollTo(0, 0);
   };
@@ -77,7 +80,7 @@ function Home() {
     isMounted.current = true;
   }, [categoryId, sort.sortProperty, searchValue, currentPage, navigate]);
 
-  const pizzas = items.map((item) => <PizzaBlock key={item.id} {...item} />);
+  const pizzas = items.map((item: any) => <PizzaBlock key={item.id} {...item} />);
 
   const skeletons = [...new Array(10)].map((_, idx) => <Skeleton key={idx} />);
 
@@ -99,6 +102,6 @@ function Home() {
       <Pagination currentPage={currentPage} setCurrentPage={changePageHandler} />
     </div>
   );
-}
+};
 
 export default Home;

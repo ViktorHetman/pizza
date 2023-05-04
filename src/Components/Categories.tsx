@@ -1,4 +1,11 @@
-function Categories({ categoryId, setCategoryId }) {
+import React from 'react';
+
+type CategoriesProps = {
+  categoryId: number;
+  setCategoryId: any;
+};
+
+const Categories: React.FC<CategoriesProps> = ({ categoryId, setCategoryId }) => {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острая', 'Закрытая'];
 
   return (
@@ -15,6 +22,6 @@ function Categories({ categoryId, setCategoryId }) {
       </ul>
     </div>
   );
-}
+};
 
 export default Categories;
