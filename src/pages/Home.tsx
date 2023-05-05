@@ -1,6 +1,7 @@
 import { useEffect, useRef, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../redux/store';
 import qs from 'qs';
 
 import Categories from '../Components/Categories';
@@ -10,7 +11,7 @@ import Skeleton from '../Components/PizzaBlock/Skeleton';
 import Pagination from '../Components/Pagination';
 
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzasSlice';
+import { SearchPizzaParams, fetchPizzas } from '../redux/slices/pizzasSlice';
 
 import { selectFilter } from '../redux/slices/filterSlice';
 import { selectPizza } from '../redux/slices/pizzasSlice';
@@ -18,7 +19,7 @@ import { selectFilterValue } from '../redux/slices/filterSlice';
 
 const Home: FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
@@ -41,28 +42,27 @@ const Home: FC = () => {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    dispatch(
-      //@ts-ignore
-      fetchPizzas({ currentPage, category, sortBy, order, search }),
-    );
+    dispatch(fetchPizzas({ currentPage: String(currentPage), category, sortBy, order, search }));
 
     window.scrollTo(0, 0);
   };
 
   useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = qs.parse(window.location.search.substring(1)) as unknown as SearchPizzaParams;
 
-      const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
-
+      const sort = list.find((obj) => obj.sortProperty === params.sortBy);
       dispatch(
         setFilters({
-          ...params,
-          sort,
+          searchValue: params.search,
+          categoryId: Number(params.category),
+          currentPage: Number(params.currentPage),
+          sort: sort || list[1],
         }),
       );
       isSearch.current = true;
     }
+    isMounted.current = true;
   }, [dispatch]);
 
   useEffect(() => {
@@ -81,7 +81,11 @@ const Home: FC = () => {
 
       navigate(`?${queryString}`);
     }
-    isMounted.current = true;
+
+    if (!window.location.search) {
+      dispatch(fetchPizzas({} as SearchPizzaParams));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, sort.sortProperty, searchValue, currentPage, navigate]);
 
   const pizzas = items.map((item: any) => <PizzaBlock key={item.id} {...item} />);
@@ -95,7 +99,7 @@ const Home: FC = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      {status === 'error' ? (
+      {status === 'rejected' ? (
         <div className="content__error-info">
           <h2>Произошла ошибка 😕</h2>
           <p>К сожалению не удалось получить пиццы. Попробуйте повторить попытку позже</p>

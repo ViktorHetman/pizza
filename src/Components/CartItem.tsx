@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 
-import { addItem, cartRemoveItem, removeItem } from '../redux/slices/cartSlice';
+import { CartItem, addItem, cartRemoveItem, removeItem } from '../redux/slices/cartSlice';
+import { useAppDispatch } from '../redux/store';
 
 type CartProp = {
   id: string;
@@ -13,14 +13,14 @@ type CartProp = {
   imageUrl: string;
 };
 
-const CartItem: React.FC<CartProp> = ({ id, title, type, size, price, count, imageUrl }) => {
-  const dispatch = useDispatch();
+const CartItemBlock: React.FC<CartProp> = ({ id, title, type, size, price, count, imageUrl }) => {
+  const dispatch = useAppDispatch();
 
   const addOnePizzaHandler = () => {
     dispatch(
       addItem({
         id,
-      }),
+      } as CartItem),
     );
   };
 
@@ -112,4 +112,4 @@ const CartItem: React.FC<CartProp> = ({ id, title, type, size, price, count, ima
   );
 };
 
-export default CartItem;
+export default CartItemBlock;

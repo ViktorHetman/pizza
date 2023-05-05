@@ -12,12 +12,26 @@ type PizzaItem = {
   types: [number, number];
 };
 
-interface PizzaSliceState {
-  items: PizzaItem[];
-  status: 'pending' | 'fulfilled' | 'rejected';
+export type SearchPizzaParams = {
+  currentPage: string;
+  category: string;
+  sortBy: string;
+  order: string;
+  search: string;
+};
+
+export enum Status {
+  LOADING = 'pending',
+  SUCCESS = 'fulfilled',
+  ERROR = 'rejected',
 }
 
-export const fetchPizzas = createAsyncThunk<PizzaItem[], Record<string, string>>(
+interface PizzaSliceState {
+  items: PizzaItem[];
+  status: Status;
+}
+
+export const fetchPizzas = createAsyncThunk<PizzaItem[], SearchPizzaParams>(
   'pizzas/fetchPizzas',
   async (params) => {
     const { currentPage, category, sortBy, order, search } = params;
@@ -30,7 +44,7 @@ export const fetchPizzas = createAsyncThunk<PizzaItem[], Record<string, string>>
 
 const initialState: PizzaSliceState = {
   items: [],
-  status: 'pending',
+  status: Status.LOADING,
 };
 
 const pizzasSlice = createSlice({
@@ -43,17 +57,17 @@ const pizzasSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPizzas.pending, (state) => {
-      state.status = 'pending';
+      state.status = Status.LOADING;
       state.items = [];
     });
 
     builder.addCase(fetchPizzas.fulfilled, (state, action) => {
-      state.status = 'fulfilled';
+      state.status = Status.SUCCESS;
       state.items = action.payload;
     });
 
     builder.addCase(fetchPizzas.rejected, (state) => {
-      state.status = 'rejected';
+      state.status = Status.ERROR;
       state.items = [];
     });
   },
