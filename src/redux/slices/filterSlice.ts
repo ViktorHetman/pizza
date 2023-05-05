@@ -59,8 +59,6 @@ const filterSlice = createSlice({
 
 export const selectFilter = (state: RootState) => state.filter;
 
-export const selectSort = (state: RootState) => state.filter.sort;
-
 export const selectFilterValue = (state: RootState) => state.filter.searchValue;
 
 export const { setCategoryId, setSort, setCurrentPage, setFilters, setSearchValue } =

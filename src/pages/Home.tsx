@@ -1,4 +1,4 @@
-import { useEffect, useRef, FC } from 'react';
+import { useEffect, useRef, FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../redux/store';
@@ -28,9 +28,10 @@ const Home: FC = () => {
 
   const searchValue = useSelector(selectFilterValue);
 
-  const changeCategoryHandler = (id: number) => {
+  const changeCategoryHandler = useCallback((id: number) => {
     dispatch(setCategoryId(id));
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const changePageHandler = (page: number) => {
     dispatch(setCurrentPage(page));
@@ -96,7 +97,7 @@ const Home: FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories categoryId={categoryId} setCategoryId={changeCategoryHandler} />
-        <Sort />
+        <Sort sort={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'rejected' ? (
