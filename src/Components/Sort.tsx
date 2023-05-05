@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState, FC } from 'react';
+import { useEffect, useRef, useState, FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { setSort } from '../redux/slices/filterSlice';
+import { selectSort } from '../redux/slices/filterSlice';
 
 type SortItem = {
   name: string;
@@ -19,7 +20,7 @@ export const list: SortItem[] = [
 
 const Sort: FC = () => {
   const dispatch = useDispatch();
-  const sort = useSelector((state: any) => state.filter.sort);
+  const sort = useSelector(selectSort);
   const sortRef = useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState(false);
