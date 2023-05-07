@@ -2,8 +2,9 @@ import { useState, FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { CartItem, addItem } from '../../redux/slices/cartSlice';
-import { selectCartItemById } from '../../redux/slices/cartSlice';
+import { CartItem } from '../../redux/cart/types';
+import { selectCartItemById } from '../../redux/cart/selectors';
+import { addItem } from '../../redux/cart/slice';
 
 const doughNames = ['Тонкое', 'Традиционное'];
 const sizeNumber = [26, 30, 40];
