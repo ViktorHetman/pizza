@@ -2,13 +2,13 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
-import FullPizza from './pages/FullPizza';
 import MainLayout from './layouts/MainLayout';
 
 import './scss/app.scss';
 
-const Cart = React.lazy(() => import('./pages/Cart'));
-const NotFound = React.lazy(() => import('./pages/NotFound'));
+const Cart = React.lazy(() => import(/* webpackChunkName: "Cart" */ './pages/Cart'));
+const FullPizza = React.lazy(() => import(/* webpackChunkName: "FullPizza" */ './pages/FullPizza'));
+const NotFound = React.lazy(() => import(/* webpackChunkName: "NotFound" */ './pages/NotFound'));
 
 const App: React.FC = () => {
   return (
@@ -23,7 +23,14 @@ const App: React.FC = () => {
             </React.Suspense>
           }
         />
-        <Route path="pizza/:id" element={<FullPizza />} />
+        <Route
+          path="pizza/:id"
+          element={
+            <React.Suspense fallback={<div>Загрузка страницы пиццы...</div>}>
+              <FullPizza />
+            </React.Suspense>
+          }
+        />
         <Route
           path="*"
           element={

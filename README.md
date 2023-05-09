@@ -20,4 +20,7 @@ Some rerenders oiptimizations via:
 useCallback,
 React.memo.
 
+Some bundle optimizationns via:
+Code Splitting(React.lazy)
+
 For Back-end was used - MockAPI.io
